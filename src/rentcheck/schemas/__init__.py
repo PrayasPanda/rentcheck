@@ -2,23 +2,18 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from rentcheck.schemas.context_item import ContextItem, ContextKind
+from rentcheck.schemas.item_verdict import ItemVerdict, Verdict
+from rentcheck.schemas.run_result import RunResult
+from rentcheck.schemas.task import Task
+from rentcheck.schemas.variant import Variant
 
-from pydantic import BaseModel
-
-
-class ElementKind(str, Enum):
-    """The kind of agent-config element being tested."""
-
-    SECTION = "section"
-    SKILL = "skill"
-    MCP_SERVER = "mcp_server"
-
-
-class Element(BaseModel):
-    """A single testable unit of agent configuration."""
-
-    id: str
-    kind: ElementKind
-    name: str
-    tokens: int = 0
+__all__ = [
+    "ContextItem",
+    "ContextKind",
+    "ItemVerdict",
+    "RunResult",
+    "Task",
+    "Variant",
+    "Verdict",
+]
