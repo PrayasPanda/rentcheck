@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rentcheck"
+version = "0.1.0"
+description = "A/B test each section of AGENTS.md/CLAUDE.md, each agent skill, and each MCP server to see which actually help a coding agent."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "monalishap600", email = "monalishap600@gmail.com" }]
+dependencies = [
+    "typer",
+    "rich",
+    "pydantic>=2",
+    "pydantic-settings",
+    "gitpython",
+    "tiktoken",
+    "jinja2",
+    "httpx",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio", "ruff", "mypy"]
+
+[project.scripts]
+rentcheck = "rentcheck.__main__:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rentcheck"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
