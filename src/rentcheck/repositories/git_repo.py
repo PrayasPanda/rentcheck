@@ -9,6 +9,7 @@ working tree, index, or current branch.
 
 from __future__ import annotations
 
+import subprocess
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -135,6 +136,22 @@ class GitRepo:
         finally:
             self._remove_worktree(wt_dir)
 
+    def apply_patch(self, wt_dir: Path, patch: Path) -> bool:
+        """Apply ``patch`` inside ``wt_dir``; return ``True`` on success.
+
+        Runs ``git apply`` with ``wt_dir`` as the working directory so paths
+        resolve against the worktree and the user's own tree is never touched.
+        A non-applying patch returns ``False`` rather than raising, so callers
+        can record a clear drop reason.
+        """
+        result = subprocess.run(
+            ["git", "apply", str(patch)],
+            cwd=wt_dir,
+            capture_output=True,
+            text=True,
+        )
+        return result.returncode == 0
+
     def _remove_worktree(self, wt_dir: Path) -> None:
         """Remove a worktree and prune git's bookkeeping, ignoring absence."""
         if wt_dir.exists():
@@ -168,10 +185,22 @@ def _count_changes(patch: str) -> tuple[int, int]:
 
 
 def _full_file_patch(diff: git.Diff, body: str) -> str:
-    """Wrap a diff body in a minimal ``git apply``-able file header."""
+    """Wrap a diff body in a minimal ``git apply``-able file header.
+
+    Added and deleted files use ``/dev/null`` on the missing side and carry the
+    ``new file`` / ``deleted file`` marker, so ``git apply`` accepts them.
+    """
     a = diff.a_path or diff.b_path
     b = diff.b_path or diff.a_path
-    return f"diff --git a/{a} b/{b}\n--- a/{a}\n+++ b/{b}\n{body}"
+    added = diff.new_file or diff.a_blob is None
+    deleted = diff.deleted_file or diff.b_blob is None
+    if added:
+        header = f"diff --git a/{b} b/{b}\nnew file mode 100644\n--- /dev/null\n+++ b/{b}\n"
+    elif deleted:
+        header = f"diff --git a/{a} b/{a}\ndeleted file mode 100644\n--- a/{a}\n+++ /dev/null\n"
+    else:
+        header = f"diff --git a/{a} b/{b}\n--- a/{a}\n+++ b/{b}\n"
+    return header + body
 
 
 __all__ = ["CommitInfo", "FileDiff", "GitRepo"]

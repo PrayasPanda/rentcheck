@@ -14,12 +14,15 @@ from rentcheck.schemas.scan_result import (
     StaleRef,
 )
 from rentcheck.schemas.task import Task
+from rentcheck.schemas.test_run_result import TestRunResult
+from rentcheck.schemas.validation import DropReason, TaskStatus, ValidationResult
 from rentcheck.schemas.variant import Variant
 
 __all__ = [
     "ContextItem",
     "ContextKind",
     "CostEstimate",
+    "DropReason",
     "ItemVerdict",
     "MineResult",
     "MinedTask",
@@ -29,6 +32,9 @@ __all__ = [
     "StaleKind",
     "StaleRef",
     "Task",
+    "TaskStatus",
+    "TestRunResult",
+    "ValidationResult",
     "Variant",
     "Verdict",
 ]
