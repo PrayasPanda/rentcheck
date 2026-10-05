@@ -25,6 +25,10 @@ class ConfigError(RentcheckError):
     """Raised when configuration is missing or invalid."""
 
 
+class ScanError(RentcheckError):
+    """Raised when scanning a repository for agent context fails."""
+
+
 class MiningError(RentcheckError):
     """Raised when mining historical tasks from a repository fails."""
 

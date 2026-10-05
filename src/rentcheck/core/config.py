@@ -39,6 +39,23 @@ class Settings(BaseSettings):
     workdir: Path = Path(".rentcheck")
     ollama_base_url: str = "http://localhost:11434"
 
+    # Cost-estimate inputs for ``rentcheck scan``.
+    requests_per_day: int = Field(
+        default=200,
+        ge=0,
+        description="Assumed agent requests per day for the cost estimate.",
+    )
+    price_per_mtok: float = Field(
+        default=3.0,
+        ge=0.0,
+        description="USD price per million input tokens for the cost estimate.",
+    )
+    days_per_month: int = Field(
+        default=30,
+        ge=1,
+        description="Days per month used to project the monthly cost estimate.",
+    )
+
     @classmethod
     def settings_customise_sources(
         cls,
