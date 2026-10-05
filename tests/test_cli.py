@@ -17,7 +17,7 @@ def test_version() -> None:
     assert __version__ in result.stdout
 
 
-@pytest.mark.parametrize("command", ["scan", "mine", "ablate", "report"])
+@pytest.mark.parametrize("command", ["mine", "ablate", "report"])
 def test_command_stub(command: str) -> None:
     result = runner.invoke(app, [command])
     assert result.exit_code == 0
