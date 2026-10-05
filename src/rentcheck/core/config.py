@@ -56,6 +56,27 @@ class Settings(BaseSettings):
         description="Days per month used to project the monthly cost estimate.",
     )
 
+    # Mining inputs for ``rentcheck mine``.
+    test_command: str | None = Field(
+        default=None,
+        description="Override the auto-detected test command for mined tasks.",
+    )
+    test_patterns: tuple[str, ...] = Field(
+        default=(
+            "tests/",
+            "test/",
+            "test_*.py",
+            "*_test.py",
+            "*.test.ts",
+            "*.test.js",
+            "*.spec.ts",
+            "*.spec.js",
+            "*_test.go",
+            "tests.rs",
+        ),
+        description="Glob/prefix patterns that mark a changed path as a test file.",
+    )
+
     @classmethod
     def settings_customise_sources(
         cls,
