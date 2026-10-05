@@ -61,6 +61,10 @@ class Settings(BaseSettings):
         default=None,
         description="Override the auto-detected test command for mined tasks.",
     )
+    setup_command: str | None = Field(
+        default=None,
+        description="Command run once per worktree before tests (e.g. 'pip install -e .').",
+    )
     test_patterns: tuple[str, ...] = Field(
         default=(
             "tests/",
